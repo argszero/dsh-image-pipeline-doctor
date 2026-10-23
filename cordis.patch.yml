@@ -1,0 +1,39 @@
+# The @argszero/dsh-image-pipeline-doctor bundle patch: mount and go.
+#
+# A host whose native image module cannot load does not say so. The first pasted
+# screenshot is refused, and the error that lands in the conversation is the
+# client's catch-all rewrite (`session/agent-busy`), not the loader's message —
+# so "restart and try again" looks like a fix and the real cause is nowhere on
+# screen. Discussion #10758 reports exactly that shape on Windows, where a
+# third-party plugin's `sharp` displaced the host's and the two `libvips`
+# bindings could not share one process.
+#
+# This plugin does not repair that. It moves the discovery: one probe at boot
+# through the public `ctx.attachments.validateImage()` call — which reaches
+# `detectImage` → `requireSharp()` before the pass-through branch, so a 1×1 PNG
+# is enough to load the same native module a screenshot needs — and one logged
+# line naming the decoder and the real cause when it fails.
+#
+# A healthy install says nothing. There is no success line, no "image pipeline
+# OK" banner, and no second probe: a diagnostic that warns on a working host is
+# one users delete.
+#
+# It also cannot say which plugin's `sharp` won the mapping, and it does not try:
+# it reports that the host's decode path fails and what it failed with, which is
+# the fact a reader needs, not the attribution.
+#
+# Optional config:
+#
+#   - set:
+#       - id: image-pipeline-doctor
+#         config:
+#           # Run the probe on activation (default true). `false` keeps the
+#           # plugin mounted and silent.
+#           enabled: true
+#           # Milliseconds to wait before probing, for a Host tree that is
+#           # still settling. Defaults to 0.
+#           delayMs: 0
+
+- insert:
+    - id: image-pipeline-doctor
+      name: '@argszero/dsh-image-pipeline-doctor'

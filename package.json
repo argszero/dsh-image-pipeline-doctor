@@ -1,0 +1,69 @@
+{
+  "name": "@argszero/dsh-image-pipeline-doctor",
+  "version": "0.1.0",
+  "description": "Checks at boot that the host's image decode path works, so a broken native image module is named once instead of surfacing as a session error on the first pasted screenshot. It submits one 1x1 PNG through the public `ctx.attachments.validateImage()` call, which reaches the decoder before the pass-through branch, and logs exactly one line naming the decoder and the real cause when that fails. A healthy install says nothing, a mounted-but-idle host says nothing, and no path out of the plugin throws or blocks a boot: it reads and reports, never repairs, never writes an attachment and never retries.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/argszero/dsh-image-pipeline-doctor.git"
+  },
+  "homepage": "https://github.com/argszero/dsh-image-pipeline-doctor#readme",
+  "bugs": {
+    "url": "https://github.com/argszero/dsh-image-pipeline-doctor/issues"
+  },
+  "keywords": [
+    "cordis",
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "image",
+    "attachment",
+    "sharp",
+    "native-module",
+    "diagnostics"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.5",
+    "typescript": "^5.9.3",
+    "yaml": "^2.8.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "tsc",
+    "pretest": "tsc",
+    "test": "node --test \"test/*.spec.mjs\"",
+    "mutate": "tsc && node scripts/mutate.mjs",
+    "real": "tsc && node scripts/real-sharp-arm.mjs"
+  },
+  "engines": {
+    "node": "^22.19 || >=24"
+  }
+}
