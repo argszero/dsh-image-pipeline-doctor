@@ -26,6 +26,11 @@ The build output ships in the repository, so no build step runs on install.
 `npm i` alone does not mount a plugin: the `dsh plugin add` verb is what writes
 it into `dsh.profile.bundles`.
 
+The plugin imports nothing outside its own build — no runtime dependency and no
+peer — so an install adds exactly one package and has nothing to warn about. It
+reads the attachment plane through the `attachments` service it injects, not
+through an import of cordis or of the attachment package.
+
 ## What you see
 
 Healthy install: nothing. There is no success line and no "image pipeline OK"

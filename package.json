@@ -47,9 +47,6 @@
       "patch": "./cordis.patch.yml"
     }
   },
-  "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.2"
-  },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.5",
     "typescript": "^5.9.3",

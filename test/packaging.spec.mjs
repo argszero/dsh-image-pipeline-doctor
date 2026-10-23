@@ -55,7 +55,12 @@ test('the plugin declares the one service it reads through', async () => {
   assert.deepEqual(module.default.inject, module.inject)
 })
 
-test('the declared runtime peer is the one the plugin runs inside', () => {
-  assert.equal(typeof manifest.peerDependencies['@deepseek-ai/cordis'], 'string')
-  assert.equal(manifest.dependencies, undefined, 'the plugin ships no runtime dependency')
+test('the plugin asks for nothing outside its own build', () => {
+  // The built output's only import is `./probe.js`. A peer declaration would buy
+  // nothing at runtime and, with `autoInstallPeers: false`, only print a
+  // "missing peer" line on every install — so the contract asserted here is
+  // that there is nothing to install and nothing to warn about.
+  assert.equal(manifest.dependencies, undefined)
+  assert.equal(manifest.peerDependencies, undefined)
+  assert.equal(typeof manifest.devDependencies['@deepseek-ai/cordis'], 'string')
 })
